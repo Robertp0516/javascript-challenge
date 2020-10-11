@@ -6,6 +6,8 @@ var tableData = data;
 // reference the table body
 var tbody = d3.select("tbody");
 
+// columns in datatable : "datetime", "city", "state", "country", "shape", "durationMinutes", "comments"
+
 //go through sighting values for each column
 tableData.forEach(function(ufoSight) {
     //checking data format in console
@@ -22,17 +24,24 @@ tableData.forEach(function(ufoSight) {
 
 });
 
-// select button 
+// select button event listener
 var button = d3.select("#filter-btn");
-button.on("click", function(){
+button.on("click", () => {
+    d3.event.preventDefault();
+    //d3 to use date input to set as value to filter data
+    var inputValue = d3.select("#datetime");
+    var inputDate = inputValue.property("value");
+    var filteredData = tableData.filter(tableData => tableData.datetime === inputDate);
 
-    tbody.html("");
-    // selecting input date to get html keyvalue
-    var inputElement = d3.select("datetime");
-    // grabbbing value property from the input date to filter data by datetime
-    var inputValue = inputElement.property("value");
-    var filteredData = tableData.filter(sighting => sighting.datetime == inputValue);
-    //checking filtered values 
-    console.log(filteredData);
-})
+    console.log(filteredData)
 
+    filteredData.forEach(function(events){
+        var row = tbody.append("tr");
+        Object.entries(events).forEach(function([d,i]){
+            var cell = row.append("td");
+            cell.text(i)
+    });
+    });
+
+
+});
